@@ -1,4 +1,0 @@
-repository "3D Project@Mimziphery@cloud"
-  path "/"
-    br "/main"
-    co "/main"

@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     public float gravity = -20f;
     public float verticalSpeed = 3;
     public float jumpSpeed = 15f;
+    private bool isJumping = false;
 
     private CharacterController characterController;
     private Animator animator;
@@ -59,21 +60,19 @@ public class PlayerMovement : MonoBehaviour
         movement = transform.TransformDirection(movement);
         characterController.SimpleMove(movement * speed);
 
-        var jump = Input.GetKey(KeyCode.Space);
+        isJumping = Input.GetKey(KeyCode.Space);
         var moveVelocity = transform.forward * (verticalSpeed * vertical);
-        if (jump)
-        {
-            moveVelocity.y = jumpSpeed;
-            animator.SetBool(IsJumping, true);
-        }
-        else
-        {
-            animator.SetBool(IsJumping, false);
-        }
+        animator.SetBool(IsJumping, false);
 
         moveVelocity.y += gravity * Time.deltaTime;
 
 
+        characterController.Move(moveVelocity * Time.deltaTime);
+        if (!isJumping) return;
+        moveVelocity.y = jumpSpeed;
+        moveVelocity.x = -jumpSpeed;
+        animator.SetBool(IsJumping, true);
+        isJumping = false;
         characterController.Move(moveVelocity * Time.deltaTime);
     }
 
